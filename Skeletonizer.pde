@@ -1,17 +1,8 @@
-/*-----------------------------------
-Library: ComputationalGeometry
-By: Mark Collins & Toru Hasegawa
-Example: IsoSkeleton
-
-Creates a 3D skeleton with adjustable 
-thickness and node size, based on an
-edge pairing of points.
-------------------------------------*/
-
 import ComputationalGeometry.*;
+
 NewSkeleton skeleton;
 PShape ps;
-boolean drawShape = false;
+boolean drawShape = true;
 
 void setup() {
   size(800, 600, P3D);
@@ -22,9 +13,9 @@ void setup() {
   // Create points to make the network
   PVector[] pts = new PVector[100];
   for (int i=0; i<pts.length; i++) {
-    pts[i] = new PVector(random(-100, 100), random(-100, 100), random(-100, 100) );
+    pts[i] = new PVector(random(-100, 100), random(-100, 100), random(-100, 100));
   }  
-
+ 
   for (int i=0; i<pts.length; i++) {
     for (int j=i+1; j<pts.length; j++) {
       if (pts[i].dist( pts[j] ) < 50) {
@@ -32,13 +23,24 @@ void setup() {
       }
     }
   }
- 
-  ps = createShape();
-  ps.beginShape();
-  for (PVector node : skeleton.nodes) {
-    ps.vertex(node.x, node.y, node.z);
+
+  ps = createShape(GROUP);
+  
+  for (ArrayList al : skeleton.adj) {
+    PShape child = createShape();
+    child.beginShape();
+    color col = color(127 + random(127), 127 + random(127), 127 + random(127));
+    child.stroke(col);
+    child.fill(col);
+    child.strokeWeight(10);
+    for (int i=0; i<al.size(); i++) {
+      int index = (int) al.get(i);
+      PVector p = skeleton.nodes[index];
+      child.vertex(p.x, p.y, p.z);
+    }
+    child.endShape();
+    ps.addChild(child);
   }
-  ps.endShape();
 }
 
 void draw() {

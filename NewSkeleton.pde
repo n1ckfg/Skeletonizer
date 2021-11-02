@@ -1,35 +1,6 @@
-/**
- * Computational Geometry
- * A simple, lightweight library for generating meshes such as isometric surfaces, boundary hulls and skeletons.
- * http://thecloudlab.org/processing/library.html
- *
- * Copyright (c) 2015 Mark Collins & Toru Hasegawa http://thecloudlab.org
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA  02111-1307  USA
- * 
- * @author      Mark Collins & Toru Hasegawa http://thecloudlab.org
- * @modified    02/10/2016
- * @version     3.0 (3)
- */
-
-import java.util.ArrayList;
-import processing.core.*;
 import quickhull3d.*;
 
-public class NewSkeleton implements PConstants {
+class NewSkeleton {
   
   PApplet theParent;
   public ArrayList[] adj;
@@ -106,7 +77,6 @@ public class NewSkeleton implements PConstants {
    ================================================ */
 
   public void plot(float thickness, float _jointRatio) {
-    
     // Check if the thickness is good > 0 just incase
     float minVal = 0.01f;
     thickness = (thickness < minVal) ? minVal : thickness ;
@@ -147,8 +117,8 @@ public class NewSkeleton implements PConstants {
     this.marked[v] = true;
 
     for (int i = 0; i < adj[v].size(); i++) {
-      int w = (Integer)adj[v].get(i);
-      if (! marked[w])  computeMesh(w);
+      int w = (Integer) adj[v].get(i);
+      if (! marked[w]) computeMesh(w);
     }
   }
 
