@@ -1,8 +1,9 @@
 import ComputationalGeometry.*;
+import latkProcessing.*;
 
 NewSkeleton skeleton;
-PShape ps;
-boolean drawShape = true;
+Latk la;
+boolean drawOrig = false;
 
 void setup() {
   size(800, 600, P3D);
@@ -24,22 +25,19 @@ void setup() {
     }
   }
 
-  ps = createShape(GROUP);
+  la = new Latk(this);
   
   for (ArrayList al : skeleton.adj) {
-    PShape child = createShape();
-    child.beginShape();
-    color col = color(127 + random(127), 127 + random(127), 127 + random(127));
-    child.stroke(col);
-    child.fill(col);
-    child.strokeWeight(10);
+    ArrayList<LatkPoint> points = new ArrayList<LatkPoint>();
     for (int i=0; i<al.size(); i++) {
       int index = (int) al.get(i);
       PVector p = skeleton.nodes[index];
-      child.vertex(p.x, p.y, p.z);
+      p = new PVector(-p.x, p.z, p.y);
+      points.add(new LatkPoint(this, p));
     }
-    child.endShape();
-    ps.addChild(child);
+    LatkStroke stroke = new LatkStroke(this, points, color(0,255,255));
+    stroke.refine();
+    la.layers.get(0).frames.get(0).strokes.add(stroke);
   }
 }
 
@@ -51,15 +49,13 @@ void draw() {
   camera(zm * cos(sp), zm * sin(sp), zm, 0, 0, 0, 0, 0, -1);
   
   noStroke();
-  if (!drawShape) {
+  if (drawOrig) {
     skeleton.plot(10.f * float(mouseX) / (2.0f*width), float(mouseY) / (2.0*height));  // Thickness as parameter
   } else {
-    stroke(0);
-    strokeWeight(20);
-    shape(ps, 0, 0);
+    la.run();
   }
 }
 
 void keyPressed() {
-  drawShape = !drawShape;
+  drawOrig = !drawOrig;
 }
