@@ -32,9 +32,16 @@ void setup() {
     for (int i=0; i<al.size(); i++) {
       int index = (int) al.get(i);
       PVector p = skeleton.nodes[index];
-      p = new PVector(-p.x, p.z, p.y);
+      p = new PVector(p.x, p.y, p.z);
+      if (points.size() > 1) {
+        LatkPoint lpLast = points.get(points.size()-1);
+        PVector pAvg = p.copy().add(lpLast.co);
+        pAvg.mult(0.5);
+        points.add(new LatkPoint(this, pAvg));
+      }
       points.add(new LatkPoint(this, p));
     }
+    
     LatkStroke stroke = new LatkStroke(this, points, color(0,255,255));
     stroke.refine();
     la.layers.get(0).frames.get(0).strokes.add(stroke);
